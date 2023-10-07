@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame import mixer
 import random
 
 from threading import Thread
@@ -11,14 +12,6 @@ DIRECTIONS = ("LEFT", "RIGHT", "UP", "DOWN")
 
 # destination arrows
 # paste them in background image
-TOP_ARROWS = ( pg.image.load('.\\images\\arrow-left.png' ),
-               pg.image.load('.\\images\\arrow-down.png' ),
-               pg.image.load('.\\images\\arrow-up.png'   ),
-               pg.image.load('.\\images\\arrow-right.png') )
-
-TOP_ARROWS_COORD = ( ( 39, 20), (137, 20), (235, 20), (333, 20),     # left side
-                     (491, 20), (589, 20), (687, 20), (785, 20) )    # right side
-
 
 # input arrows
 INP_ARROW_IMAGES = { "LEFT"  : pg.image.load('.\\images\\inp-arrow-left.png' ),
@@ -35,7 +28,7 @@ LEFT_SIDE_ARROW_PROPS  = { "LEFT"  : {"image": INP_ARROW_IMAGES["LEFT"],  "coord
 RIGHT_SIDE_ARROW_PROPS = { "LEFT"  : {"image": INP_ARROW_IMAGES["LEFT"],  "coords" : (491, 564), "key": pg.K_LEFT},
                            "DOWN"  : {"image": INP_ARROW_IMAGES["DOWN"],  "coords" : (589, 564), "key": pg.K_DOWN},
                            "UP"    : {"image": INP_ARROW_IMAGES["UP"]  ,  "coords" : (687, 564), "key": pg.K_UP},
-                           "RIGHT" : {"image": INP_ARROW_IMAGES["RIGHT"], "coords" : (785, 564), "key": pg.K_DOWN} }
+                           "RIGHT" : {"image": INP_ARROW_IMAGES["RIGHT"], "coords" : (785, 564), "key": pg.K_RIGHT} }
 
 
 
@@ -65,6 +58,8 @@ class Arrow:
                 self.in_range = True
 
             if self.y < -50:
+                miss_sound = mixer.Sound(".\\sound\\miss_sound.mp3")
+                miss_sound.play()
                 self.is_alive = False
 
 
@@ -77,9 +72,17 @@ class Arrow:
 
     def get_score(self):
         difference = abs(20 - self.y)
-        if difference < 20:     return 10
-        elif difference < 50:   return 5
-        else:                   return 0
+        if difference > 50:
+            miss_sound = mixer.Sound(".\\sound\\miss_sound.mp3")
+            miss_sound.play()
+            return 0
+            
+        score_sound = mixer.Sound(".\\sound\\score_sound.mp3")
+        score_sound.play()
+        if difference < 20:     
+            return 10
+        
+        return 5
 
 
     def display_arrow(self):
@@ -104,7 +107,7 @@ class GameApp:
 
 
     def create_arrow(self):
-        with open(".\\levels\\round1.txt", 'r') as file:
+        with open(".\\levels\\test.txt", 'r') as file:
             for command in file.readlines():
                 duration, is_left_side, arrow_direction = command.split()
                 sleep(float(duration))
@@ -119,8 +122,6 @@ class GameApp:
             
             # draw background
             SCREEN.blit(BACKGROUND, (0, 0))
-            for i in range(8):
-                SCREEN.blit(TOP_ARROWS[i%4], TOP_ARROWS_COORD[i])
 
             # handle events
             for event in pg.event.get():
