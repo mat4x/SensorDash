@@ -1,4 +1,4 @@
-import asyncio, websockets, socket, json
+import asyncio, websockets, socket, json, numpy
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -25,6 +25,7 @@ async def echo(websocket, path):
         if comps['SensorName'] == 'Accelerometer':
             ACCO += 1
             print("ACCO:", ACCO)
+            
         elif comps['SensorName'] == 'Orientation':
             ORIN += 1
             print("ORIN:", ORIN)
