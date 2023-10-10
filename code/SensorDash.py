@@ -134,7 +134,6 @@ class GameApp:
                     for arrow in self.active_arrows:
                         self.score += arrow.check_input(pressed_key)
 
-
             for arrow in self.active_arrows:
                 if arrow.is_alive:
                     arrow.move()
@@ -155,6 +154,8 @@ if __name__ == "__main__":
     pg.init()
     SCREEN = pg.display.set_mode((900,600))
     pg.display.set_caption("Sensor Dash")
+    mixer.music.load(".\\sound\\background_music.mp3")
+    mixer.music.play(1)
     # icon = pg.image.load(('icon location'))
     # pg.display.set_icon(icon)
 
