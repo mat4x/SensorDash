@@ -5,11 +5,13 @@ import json
 
 
 class SensorApp:
-    def __init__(self, handleEvent=lambda x: print(x), port_no:int=5000):
+    def __init__(self, handleEvent=lambda x: print(x), port_no:int=5000, **kwargs):
         self.handleEvent = handleEvent
         self.IP          = self.get_ip()
         self.hostname    = socket.gethostname()
         self.port_no     = port_no
+
+        self.__dict__.update(kwargs)
 
         print(f"Name is:    {self.hostname}")
         print(f"IP Address: {self.IP}:{self.port_no}")
@@ -38,11 +40,11 @@ class SensorApp:
 
     async def serve(self):
         async with websockets.serve(self.handler, '0.0.0.0', self.port_no, max_size=1_000_000_000) as socket:
-            print(socket)
             await asyncio.Future()
 
 
-    def start(self):
+    def start(self, **kwargs):
+        self.__dict__.update(kwargs)
         asyncio.run(self.serve())
 
 

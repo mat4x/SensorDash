@@ -1,13 +1,13 @@
 import pygame as pg
-from pygame import mixer
-import random
 
 from threading import Thread
 from time import sleep
 
+FPS = 60
 
 # background
 BACKGROUND = pg.image.load('.\\images\\background.png')
+MENU_SCREEN= pg.image.load('.\\images\\menu-screen.png')
 DIRECTIONS = ("LEFT", "RIGHT", "UP", "DOWN")
 
 # destination arrows
@@ -51,18 +51,19 @@ class Arrow:
 
     def move(self) -> bool:
         if self.is_alive:
-            self.y -= 1
+            self.y -= 4
             self.display_arrow()
 
             if not self.in_range and self.y < 170:
                 self.in_range = True
 
-            if self.y < -50:
-                miss_sound = mixer.Sound(".\\sound\\explosion.wav")
+            if self.y < -50:    # change to -50
+                miss_sound = pg.mixer.Sound(".\\sound\\explosion.wav")
                 miss_sound.play()
                 self.is_alive = False
 
             return self.is_alive
+
 
     def check_input(self, key:str) -> int:
         if self.in_range and key == self.event_key:
@@ -74,11 +75,11 @@ class Arrow:
     def get_score(self) -> int:
         difference = abs(20 - self.y)
         if difference > 50:
-            miss_sound = mixer.Sound(".\\sound\\explosion.wav")
+            miss_sound = pg.mixer.Sound(".\\sound\\explosion.wav")
             miss_sound.play()
             return 0
             
-        score_sound = mixer.Sound(".\\sound\\score_sound.mp3")
+        score_sound = pg.mixer.Sound(".\\sound\\score_sound.mp3")
         score_sound.play()
         if difference < 20:     
             return 10
@@ -116,11 +117,21 @@ class GameApp:
 
 
     def generate_arrow(self):
-        with open(".\\levels\\test.txt", 'r') as file:
+        count = 0
+        arrows = []
+        with open(".\\levels\\random.txt", 'r') as file:
             for command in file.readlines():
                 duration, is_left_side, arrow_direction = command.split()
-                sleep(float(duration))
-                self.active_arrows.append( Arrow(int(is_left_side), arrow_direction) )
+                arrows.append( (Arrow(int(is_left_side), arrow_direction), float(duration)) )
+
+        print(len(arrows))
+        
+        for arrow, delay in arrows:
+            self.active_arrows.append( arrow )
+            sleep(delay)
+
+            count += 1
+            print(count)
 
     
     def event_controller(self):
@@ -144,8 +155,7 @@ class GameApp:
 
     def start(self):
         # show menu
-        menu = self.font.render(f"Press S to start", True, (255, 255, 255))
-        SCREEN.blit(menu, (405,560))
+        SCREEN.blit(MENU_SCREEN, (0, 0))
         pg.display.update()
 
         # press S begin game
@@ -167,10 +177,13 @@ class GameApp:
     def run_game(self):
         Thread(target = self.generate_arrow).start()
 
-        pg.mixer.music.load(".\\sound\\background_music.mp3")
+        pg.mixer.music.load(".\\sound\\backup_background_music.mp3")
         pg.mixer.music.play(1)
 
+        clock = pg.time.Clock()
+
         while self.GAME_RUN:
+            clock.tick(FPS)
             SCREEN.blit(BACKGROUND, (0, 0))
 
             for arrow in self.active_arrows:
