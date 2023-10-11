@@ -7,7 +7,7 @@ import json
 class SensorApp:
     def __init__(self, handleEvent=lambda x: print(x)):
         self.handleEvent = handleEvent
-        self.IP = self.get_ip()
+        self.IP          = self.get_ip()
         self.hostname    = socket.gethostname()
 
         print(f"Name is:    {self.hostname}")
@@ -38,6 +38,7 @@ class SensorApp:
         async with websockets.serve(self.handler, '0.0.0.0', 5000, max_size=1_000_000_000) as socket:
             print(socket)
             await asyncio.Future()
+
 
     def start(self):
         asyncio.run(self.serve())
