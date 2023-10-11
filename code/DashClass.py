@@ -99,8 +99,15 @@ class GameApp:
     def __init__(self):
         self.GAME_RUN = False
         self.score    = 0
-        self.font     = pg.font.SysFont('minecraft', 25, pg.font.Font.bold)
+        self.font     = pg.font.SysFont('calibri', 25, pg.font.Font.bold)
         self.active_arrows = []
+
+
+        global SCREEN
+        SCREEN = pg.display.set_mode((900,600))
+        pg.display.set_caption("Sensor Dash")
+        # icon = pg.image.load(('icon location'))
+        # pg.display.set_icon(icon)
 
 
     def display_score(self):
@@ -120,7 +127,7 @@ class GameApp:
         # handle events
         pg.event.clear()
 
-        while True:
+        while self.GAME_RUN:
             event = pg.event.wait()
             
             if event.type == pg.QUIT:
@@ -131,6 +138,8 @@ class GameApp:
                 print("KEY:", pressed_key)
                 for arrow in self.active_arrows:
                     self.score += arrow.check_input(pressed_key)
+        print("controller exitted")
+        pg.quit()
 
 
     def start(self):
@@ -146,16 +155,16 @@ class GameApp:
             if event.type == pg.KEYDOWN and event.key == pg.K_s:
                 break
 
+        # start game
+        self.GAME_RUN = True
         thd_game = Thread(target = self.run_game)
         thd_game.start()
 
-        print("Controller started")
         self.event_controller()
         thd_game.join()
 
 
     def run_game(self):
-        self.GAME_RUN = True
         Thread(target = self.generate_arrow).start()
 
         pg.mixer.music.load(".\\sound\\background_music.mp3")
@@ -173,18 +182,12 @@ class GameApp:
             self.display_score()
             pg.display.update()
 
-        pg.quit() #for quit event
         print("GAME EXITED")
 
 
 
 if __name__ == "__main__":
-
     pg.init()
-    SCREEN = pg.display.set_mode((900,600))
-    pg.display.set_caption("Sensor Dash")
-    # icon = pg.image.load(('icon location'))
-    # pg.display.set_icon(icon)
-
     game = GameApp()
     game.start()
+    pg.quit()

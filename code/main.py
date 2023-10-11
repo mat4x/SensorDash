@@ -1,16 +1,26 @@
-class GameApp:
-	'''
-	This is the main game class the runs in the program.
-	'''
-	def __init__(self):
-		# initialise the game app
-		pass
+import SensorClass
+import DashClass
+import threading
+import pygame as pg
 
-	def reset(self):
-		# reset the game app
-		# optional
 
-		pass
+if __name__ == "__main__":
+	pg.init()
 
-	def move(self):
-		pass
+	server1 = SensorClass.SensorApp(port_no = 5000)
+	server2 = SensorClass.SensorApp(port_no = 5001)
+
+	game = DashClass.GameApp()
+
+
+
+	thd_server1 = threading.Thread(target = server1.start)
+	thd_server2 = threading.Thread(target = server2.start)
+
+	thd_server1.start()
+	thd_server2.start()
+
+	game.start()
+
+	thd_server1.join()
+	thd_server2.join()

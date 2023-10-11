@@ -5,13 +5,14 @@ import json
 
 
 class SensorApp:
-    def __init__(self, handleEvent=lambda x: print(x)):
+    def __init__(self, handleEvent=lambda x: print(x), port_no:int=5000):
         self.handleEvent = handleEvent
         self.IP          = self.get_ip()
         self.hostname    = socket.gethostname()
+        self.port_no     = port_no
 
         print(f"Name is:    {self.hostname}")
-        print(f"IP Address: {self.IP}:5000")
+        print(f"IP Address: {self.IP}:{self.port_no}")
 
 
     def get_ip(self):
@@ -27,6 +28,7 @@ class SensorApp:
 
 
     async def handler(self, websocket, path):
+        print(f"Connected {self.port_no}")
         async for message in websocket:
             message = await websocket.recv()
             data    = json.loads(message)
@@ -35,7 +37,7 @@ class SensorApp:
     
 
     async def serve(self):
-        async with websockets.serve(self.handler, '0.0.0.0', 5000, max_size=1_000_000_000) as socket:
+        async with websockets.serve(self.handler, '0.0.0.0', self.port_no, max_size=1_000_000_000) as socket:
             print(socket)
             await asyncio.Future()
 
