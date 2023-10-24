@@ -1,3 +1,5 @@
 code/__pycache__/
 code/model training/__pycache__/
 code/model training/.ipynb_checkpoints
+*.pyc
+model training/.ipynb_checkpoints/Sensor Model Training-checkpoint.ipynb
