@@ -12,8 +12,8 @@ The objective is simple: mimic the movements, swing and dance to the rhythm, and
 - Windows system with Python v3.x and [pygame](https://pypi.org/project/pygame/) installed.
 
 ## How to play
-![menu screenshot](code/images/menu-screen.png "Game menu")
-- Download the `code` file
+![menu screenshot](./code/images/menu-screen.png "Game menu")
+- Download the `code` folder from the repository.
 - Connect all the 3 devices onto the same LAN network.
 - Hold the two android devices with the (SensorStream app installed) in both of the player's hands.
 - Launch the game on you PC/laptop (run the `main.py` file)
@@ -45,4 +45,4 @@ A mini-project by:
 [Mayur Sharma](https://github.com/mat4x), [Rohan deep Kujur](https://github.com/Rdk07145) and [Atharva Karve](https://github.com/Atharva-Karve).
 
 
-Special thanks to [Priyankar Kumar's]((https://github.com/priyankark/SensorStreamServer)) SensorStream application for making this project a success.
+Special thanks to [Priyankar Kumar's](https://github.com/priyankark/SensorStreamServer) SensorStream application for making this project a success.
