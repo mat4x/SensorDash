@@ -177,7 +177,7 @@ class GameApp:
     def run_game(self):
         Thread(target = self.generate_arrow).start()
 
-        pg.mixer.music.load(".\\sound\\backup_background_music.mp3")
+        pg.mixer.music.load(".\\sound\\background_music_full.mp3")
         pg.mixer.music.play(1)
 
         clock = pg.time.Clock()
